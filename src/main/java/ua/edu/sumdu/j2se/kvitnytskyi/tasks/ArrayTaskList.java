@@ -1,5 +1,7 @@
 package ua.edu.sumdu.j2se.kvitnytskyi.tasks;
 
+import java.io.StringReader;
+
 public class ArrayTaskList {
 
     private static final int SIZE_ARRAY = 5;
@@ -12,8 +14,11 @@ public class ArrayTaskList {
     }
 
     public void add(Task task) {
+        if (task == null) {
+            throw new NullPointerException();
+        }
         if (tasks.length == fill) {
-            Task[] tempTasks = new Task[fill * 2];
+            Task[] tempTasks = new Task[fill + SIZE_ARRAY];
             System.arraycopy(tasks, 0, tempTasks, 0, fill);
             tasks = tempTasks;
         }
@@ -22,6 +27,7 @@ public class ArrayTaskList {
 
     public boolean remove(Task task) {
         boolean report = false;
+
         int i = 0;
 
         while ((tasks[i] != task) && (i != fill)) {
@@ -45,6 +51,10 @@ public class ArrayTaskList {
     }
 
     public Task getTask(int index) {
+        if (index < 0 || index >= fill) {
+            throw new IndexOutOfBoundsException();
+        }
+
         return tasks[index];
     }
 

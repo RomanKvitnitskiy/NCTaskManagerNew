@@ -1,10 +1,14 @@
 package ua.edu.sumdu.j2se.kvitnytskyi.tasks;
 
-public class LinkedTaskList {
+public class LinkedTaskList extends AbstractTaskList {
 
     private class ListElement {
         Task data; // data
         ListElement next; // pointer to next element
+    }
+
+    static {
+        type = ListTypes.types.LINKED;
     }
 
     private int fill;
@@ -14,6 +18,7 @@ public class LinkedTaskList {
         head = new ListElement();
     }
 
+    @Override
     public void add(Task task) {
         if (task == null)
             throw new NullPointerException("Task is null!");
@@ -26,13 +31,15 @@ public class LinkedTaskList {
         fill++;
     }
 
+    @Override
     public boolean remove(Task task) {
         if (task == null)
             throw new NullPointerException("Task is null!");
 
-        ListElement search = head;
         if (fill == 0)
             return false;
+
+        ListElement search = head;
 
         while (search.next != null) {                   // while the next item exists
             if (search.next.data.equals(task)) {
@@ -45,10 +52,12 @@ public class LinkedTaskList {
         return false;
     }
 
+    @Override
     public int size() {
         return fill;
     }
 
+    @Override
     public Task getTask(int index) {
         if (index < 0 || index >= fill)
             throw new IndexOutOfBoundsException("Invalid index parameter!");
@@ -60,24 +69,5 @@ public class LinkedTaskList {
             search = search.next;
 
         return search.data;
-    }
-
-    public LinkedTaskList incoming(int from, int to) {
-        if (from > to)
-            throw new IllegalArgumentException("Invalid interval parameters!");
-
-        int nextTaskTime;
-        ListElement search = new ListElement();
-        LinkedTaskList returnList = new LinkedTaskList();
-
-        while (search.next != null) {
-            search = search.next;
-
-            nextTaskTime = search.data.nextTimeAfter(from);
-
-            if (nextTaskTime != -1 && nextTaskTime < to)
-                returnList.add(search.data);
-        }
-        return returnList;
     }
 }

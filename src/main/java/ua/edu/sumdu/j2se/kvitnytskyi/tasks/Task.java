@@ -23,6 +23,10 @@ public class Task {
      * @param time;
      */
     public Task(String title, int time) {
+        if (time < 0) {
+            throw new IllegalArgumentException();
+        }
+
         this.title = title;
         this.time = time;
 
@@ -39,6 +43,10 @@ public class Task {
      * @param interval;
      */
     public Task(String title, int start, int end, int interval) {
+        if (interval <= 0 || start < 0 || end < 0) {
+            throw new IllegalArgumentException();
+        }
+
         this.title = title;
         this.start = start;
         this.end = end;
@@ -103,6 +111,10 @@ public class Task {
      * @param time;
      */
     public void setTime(int time) {
+        if (time < 0){
+            throw new IllegalArgumentException();
+        }
+
         this.time = time;
 
         if(isRepeated) {
@@ -158,6 +170,10 @@ public class Task {
      * @param interval;
      */
     public void setTime(int start, int end, int interval) {
+        if (interval <= 0 || start < 0 || end < 0) {
+            throw new IllegalArgumentException();
+        }
+
         if (!isRepeated) {
             this.isRepeated = true;
         }

@@ -2,17 +2,22 @@ package ua.edu.sumdu.j2se.kvitnytskyi.tasks;
 
 import java.io.StringReader;
 
-public class ArrayTaskList {
+public class ArrayTaskList extends AbstractTaskList {
 
     private static final int SIZE_ARRAY = 5;
 
     private Task[] tasks;
     private int fill;
 
+    static {
+        type = ListTypes.types.ARRAY;
+    }
+
     public ArrayTaskList() {
         tasks = new Task[SIZE_ARRAY];
     }
 
+    @Override
     public void add(Task task) {
         if (task == null) {
             throw new NullPointerException();
@@ -25,6 +30,7 @@ public class ArrayTaskList {
         tasks[fill++] = task;
     }
 
+    @Override
     public boolean remove(Task task) {
         boolean report = false;
 
@@ -46,27 +52,17 @@ public class ArrayTaskList {
         return report;
     }
 
+    @Override
     public int size() {
         return fill;
     }
 
+    @Override
     public Task getTask(int index) {
         if (index < 0 || index >= fill) {
             throw new IndexOutOfBoundsException();
         }
 
         return tasks[index];
-    }
-
-    public ArrayTaskList incoming(int from, int to) {
-        ArrayTaskList result = new ArrayTaskList();
-
-        for (int i = 0; i < fill; ++i) {
-            if (tasks[i].nextTimeAfter(from) != -1) {
-                result.add(tasks[i]);
-                break;
-            }
-        }
-        return result;
     }
 }

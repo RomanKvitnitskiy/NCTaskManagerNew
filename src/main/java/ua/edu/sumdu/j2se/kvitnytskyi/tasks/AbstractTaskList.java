@@ -1,5 +1,8 @@
 package ua.edu.sumdu.j2se.kvitnytskyi.tasks;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 public abstract class AbstractTaskList implements Iterable<Task>{
 
     protected static ListTypes.types type;
@@ -10,16 +13,22 @@ public abstract class AbstractTaskList implements Iterable<Task>{
 
     public abstract int size();
 
-    public AbstractTaskList incoming(int from, int to) {
+    public final AbstractTaskList incoming(int from, int to) {
         if(from > to)
             throw new IllegalArgumentException("Invalid interval parameters!");
 
-        AbstractTaskList incomingTasks = TaskListFactory.createTaskList(type);
-        for(int i = 0; i < size(); i++)
-            if (getTask(i).nextTimeAfter(from) > from && getTask(i).nextTimeAfter(from) <= to)
-                incomingTasks.add(getTask(i));
+        AbstractTaskList atl = TaskListFactory.createTaskList(type);
+        getStream().filter(t -> t.nextTimeAfter(from) != -1
+                && t.nextTimeAfter(from) <= to).forEach(atl::add);
+        return atl;
+    }
 
-        return incomingTasks;
+    public Stream<Task> getStream() {
+        Task[] tasks = new Task[this.size()];
+        for (int i = 0; i < tasks.length; ++i) {
+            tasks[i] = getTask(i);
+        }
+        return Arrays.stream(tasks);
     }
 
     @Override

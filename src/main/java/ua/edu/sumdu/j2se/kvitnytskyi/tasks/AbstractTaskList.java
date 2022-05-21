@@ -1,7 +1,11 @@
 package ua.edu.sumdu.j2se.kvitnytskyi.tasks;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.groupingBy;
 
 public abstract class AbstractTaskList implements Iterable<Task>{
 
@@ -13,13 +17,13 @@ public abstract class AbstractTaskList implements Iterable<Task>{
 
     public abstract int size();
 
-    public final AbstractTaskList incoming(int from, int to) {
-        if(from > to)
+    public final AbstractTaskList incoming(LocalDateTime from, LocalDateTime  to) {
+        if(from.isAfter(to))
             throw new IllegalArgumentException("Invalid interval parameters!");
 
         AbstractTaskList atl = TaskListFactory.createTaskList(type);
-        getStream().filter(t -> t.nextTimeAfter(from) != -1
-                && t.nextTimeAfter(from) <= to).forEach(atl::add);
+        getStream().filter(t -> t.nextTimeAfter(from).isAfter(from)
+                && t.nextTimeAfter(to).isBefore(to)).forEach(atl::add);
         return atl;
     }
 

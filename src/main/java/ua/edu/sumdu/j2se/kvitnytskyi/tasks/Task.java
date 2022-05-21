@@ -1,14 +1,16 @@
 package ua.edu.sumdu.j2se.kvitnytskyi.tasks;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task implements Cloneable {
+
     private String title;
 
-    private int time;
+    private LocalDateTime time;
+    private LocalDateTime start;
+    private LocalDateTime end;
     private int interval;
-    private int start;
-    private int end;
 
     private boolean active;
     private boolean isRepeated;
@@ -24,8 +26,8 @@ public class Task implements Cloneable {
      * @param title;
      * @param time;
      */
-    public Task(String title, int time) {
-        if (time < 0) {
+    public Task(String title, LocalDateTime time) {
+        if (time == null) {
             throw new IllegalArgumentException();
         }
 
@@ -44,8 +46,8 @@ public class Task implements Cloneable {
      * @param end;
      * @param interval;
      */
-    public Task(String title, int start, int end, int interval) {
-        if (interval <= 0 || start < 0 || end < 0) {
+    public Task(String title, LocalDateTime start, LocalDateTime end, int interval) {
+        if (interval <= 0 || start == null || end == null) {
             throw new IllegalArgumentException();
         }
 
@@ -99,7 +101,7 @@ public class Task implements Cloneable {
      * @return time, start
      *
      */
-    public int getTime() {
+    public LocalDateTime  getTime() {
         if (isRepeated) {
             return start;
         } else {
@@ -112,8 +114,8 @@ public class Task implements Cloneable {
      *
      * @param time;
      */
-    public void setTime(int time) {
-        if (time < 0){
+    public void setTime(LocalDateTime  time) {
+        if (time == null){
             throw new IllegalArgumentException();
         }
 
@@ -129,7 +131,7 @@ public class Task implements Cloneable {
      *
      * @return start, time
      */
-    public int getStartTime()
+    public LocalDateTime  getStartTime()
     {
         if (isRepeated) {
             return start;
@@ -143,7 +145,7 @@ public class Task implements Cloneable {
      *
      * @return end, time
      */
-    public int getEndTime() {
+    public LocalDateTime  getEndTime() {
         if(isRepeated) {
             return end;
         } else {
@@ -171,8 +173,8 @@ public class Task implements Cloneable {
      * @param end;
      * @param interval;
      */
-    public void setTime(int start, int end, int interval) {
-        if (interval <= 0 || start < 0 || end < 0) {
+    public void setTime(LocalDateTime  start, LocalDateTime  end, int interval) {
+        if (interval <= 0 || start == null || end == null) {
             throw new IllegalArgumentException();
         }
 
@@ -200,28 +202,20 @@ public class Task implements Cloneable {
      * @param current;
      * @return nextTime, -1
      */
-    public int nextTimeAfter(int current) {
-        if (active) {
-            if (time != 0 && current < time) {
-                return time;
+    public LocalDateTime  nextTimeAfter(LocalDateTime  current) {
+        if (isActive()) {
+            if (!isRepeated()) {
+                if (time.isAfter(current)) {
+                    return time;
+                } else return null;
             }
-            if (start != 0 && current < start) {
-                return start;
-            }
-            if (current >= start && start != 0) {
-                int nextTime = start;
-
-                while(current >= nextTime) {
-                    if (nextTime + interval <= end) {
-                        nextTime += interval;
-                    } else {
-                        return -1;
-                    }
+            for (LocalDateTime i = start; i.isBefore(end) || i.equals(end); i = i.plusSeconds(interval)) {
+                if (current.isBefore(i)) {
+                    return i;
                 }
-                return nextTime;
             }
         }
-        return -1;
+        return null;
     }
 
     @Override

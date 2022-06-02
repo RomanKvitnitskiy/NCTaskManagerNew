@@ -1,12 +1,16 @@
 package ua.edu.sumdu.j2se.kvitnytskyi.tasks;
 
-public class Task {
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+public class Task implements Cloneable {
+
     private String title;
 
-    private int time;
+    private LocalDateTime time;
+    private LocalDateTime start;
+    private LocalDateTime end;
     private int interval;
-    private int start;
-    private int end;
 
     private boolean active;
     private boolean isRepeated;
@@ -22,8 +26,8 @@ public class Task {
      * @param title;
      * @param time;
      */
-    public Task(String title, int time) {
-        if (time < 0) {
+    public Task(String title, LocalDateTime time) {
+        if (time == null) {
             throw new IllegalArgumentException();
         }
 
@@ -42,8 +46,8 @@ public class Task {
      * @param end;
      * @param interval;
      */
-    public Task(String title, int start, int end, int interval) {
-        if (interval <= 0 || start < 0 || end < 0) {
+    public Task(String title, LocalDateTime start, LocalDateTime end, int interval) {
+        if (interval <= 0 || start == null || end == null) {
             throw new IllegalArgumentException();
         }
 
@@ -97,7 +101,7 @@ public class Task {
      * @return time, start
      *
      */
-    public int getTime() {
+    public LocalDateTime  getTime() {
         if (isRepeated) {
             return start;
         } else {
@@ -110,8 +114,8 @@ public class Task {
      *
      * @param time;
      */
-    public void setTime(int time) {
-        if (time < 0){
+    public void setTime(LocalDateTime  time) {
+        if (time == null){
             throw new IllegalArgumentException();
         }
 
@@ -127,7 +131,7 @@ public class Task {
      *
      * @return start, time
      */
-    public int getStartTime()
+    public LocalDateTime  getStartTime()
     {
         if (isRepeated) {
             return start;
@@ -141,7 +145,7 @@ public class Task {
      *
      * @return end, time
      */
-    public int getEndTime() {
+    public LocalDateTime  getEndTime() {
         if(isRepeated) {
             return end;
         } else {
@@ -169,8 +173,8 @@ public class Task {
      * @param end;
      * @param interval;
      */
-    public void setTime(int start, int end, int interval) {
-        if (interval <= 0 || start < 0 || end < 0) {
+    public void setTime(LocalDateTime  start, LocalDateTime  end, int interval) {
+        if (interval <= 0 || start == null || end == null) {
             throw new IllegalArgumentException();
         }
 
@@ -198,27 +202,65 @@ public class Task {
      * @param current;
      * @return nextTime, -1
      */
-    public int nextTimeAfter(int current) {
-        if (active) {
-            if (time != 0 && current < time) {
-                return time;
+    public LocalDateTime  nextTimeAfter(LocalDateTime  current) {
+        if (isActive()) {
+            if (!isRepeated()) {
+                if (time.isAfter(current)) {
+                    return time;
+                } else return null;
             }
-            if (start != 0 && current < start) {
-                return start;
-            }
-            if (current >= start && start != 0) {
-                int nextTime = start;
-
-                while(current >= nextTime) {
-                    if (nextTime + interval <= end) {
-                        nextTime += interval;
-                    } else {
-                        return -1;
-                    }
+            for (LocalDateTime i = start; i.isBefore(end) || i.equals(end); i = i.plusSeconds(interval)) {
+                if (current.isBefore(i)) {
+                    return i;
                 }
-                return nextTime;
             }
         }
-        return -1;
+        return null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Task task = (Task) o;
+        return time == task.time
+                && start == task.start
+                && end == task.end
+                && interval == task.interval
+                && active == task.active
+                && isRepeated == task.isRepeated
+                && Objects.equals(title, task.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, time, start, end, interval, active, isRepeated);
+    }
+
+    @Override
+    public Task clone() throws CloneNotSupportedException {
+        Task cloned = (Task) super.clone();
+        cloned.title = new String(this.title);
+        cloned.time = this.time;
+        cloned.start = this.start;
+        cloned.end = this.end;
+        cloned.interval = this.interval;
+        cloned.active = this.active;
+        cloned.isRepeated = this.isRepeated;
+        return cloned;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "title='" + title + '\'' +
+                ", time=" + time +
+                ", start=" + start +
+                ", end=" + end +
+                ", interval=" + interval +
+                ", active=" + active +
+                ", repeated=" + isRepeated +
+                '}';
     }
 }

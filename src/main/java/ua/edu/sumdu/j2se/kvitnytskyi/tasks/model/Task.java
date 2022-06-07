@@ -1,8 +1,13 @@
-package ua.edu.sumdu.j2se.kvitnytskyi.tasks;
+package ua.edu.sumdu.j2se.kvitnytskyi.tasks.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * Class for storing task data.
+ *
+ * @author kvitnytskyi
+ */
 public class Task implements Cloneable {
 
     private String title;
@@ -194,6 +199,10 @@ public class Task implements Cloneable {
      */
     public boolean isRepeated() {
         return isRepeated;
+    }
+
+    public void setRepeated(boolean isRepeated) {
+        this.isRepeated = isRepeated;
     }
 
     /**

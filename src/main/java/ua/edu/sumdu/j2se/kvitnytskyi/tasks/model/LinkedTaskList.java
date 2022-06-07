@@ -1,9 +1,14 @@
-package ua.edu.sumdu.j2se.kvitnytskyi.tasks;
+package ua.edu.sumdu.j2se.kvitnytskyi.tasks.model;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+/**
+ * Class for storing tasks.
+ *
+ * @author kvitnytskyi
+ */
 public class LinkedTaskList extends AbstractTaskList {
 
     private int size;
@@ -14,6 +19,11 @@ public class LinkedTaskList extends AbstractTaskList {
         type = ListTypes.types.LINKED;
     }
 
+    /**
+     * Returns the iterator for navigating through the linked task list.
+     *
+     * @return linked task list iterator
+     */
     @Override
     public Iterator<Task> iterator() {
         return new Iterator<Task>() {
@@ -71,6 +81,11 @@ public class LinkedTaskList extends AbstractTaskList {
         }
     }
 
+    /**
+     * Adds the task to the linked task list.
+     *
+     * @param task - task to be added
+     */
     @Override
     public void add(Task task) {
         if (task == null) {
@@ -87,6 +102,12 @@ public class LinkedTaskList extends AbstractTaskList {
         size++;
     }
 
+    /**
+     * Deletes the task from the linked task list.
+     *
+     * @param task - task to be deleted
+     * @return true if the task was deleted, false if not
+     */
     @Override
     public boolean remove(Task task) {
         for (Node temp = first; temp != null; temp = temp.next) {
@@ -120,11 +141,22 @@ public class LinkedTaskList extends AbstractTaskList {
         size--;
     }
 
+    /**
+     * Returns linked task list size.
+     *
+     * @return size of the linked task list
+     */
     @Override
     public int size() {
         return size;
     }
 
+    /**
+     * Returns task by index.
+     *
+     * @param index - index to find a task in the linked task list
+     * @return desired task
+     */
     @Override
     public Task getTask(int index) {
         if (index < 0 || index >= size) {

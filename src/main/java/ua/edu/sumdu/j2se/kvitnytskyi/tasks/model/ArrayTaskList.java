@@ -1,10 +1,15 @@
-package ua.edu.sumdu.j2se.kvitnytskyi.tasks;
+package ua.edu.sumdu.j2se.kvitnytskyi.tasks.model;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+/**
+ * Class for storing tasks.
+ *
+ * @author kvitnytskyi
+ */
 public class ArrayTaskList extends AbstractTaskList {
 
     private Task[] tasks;
@@ -20,6 +25,11 @@ public class ArrayTaskList extends AbstractTaskList {
         tasks = new Task[size];
     }
 
+    /**
+     * Adds the task to the array task list.
+     *
+     * @param task - task to be added
+     */
     @Override
     public void add(Task task) {
         if (task == null) {
@@ -35,6 +45,12 @@ public class ArrayTaskList extends AbstractTaskList {
         ++curr;
     }
 
+    /**
+     * Deletes the task from the array task list.
+     *
+     * @param task - task to be deleted
+     * @return true if the task was deleted, false if not
+     */
     @Override
     public boolean remove(Task task) {
         int index = findTask(task);
@@ -61,11 +77,22 @@ public class ArrayTaskList extends AbstractTaskList {
         return -1;
     }
 
+    /**
+     * Returns array task list size.
+     *
+     * @return size of the array task list
+     */
     @Override
     public int size() {
         return curr;
     }
 
+    /**
+     * Returns task by index.
+     *
+     * @param index - index to find a task in the array task list
+     * @return desired task
+     */
     @Override
     public Task getTask(int index) {
         if (index < 0 || index >= curr) {
@@ -74,6 +101,11 @@ public class ArrayTaskList extends AbstractTaskList {
         return tasks[index];
     }
 
+    /**
+     * Returns the iterator for navigating through the array task list.
+     *
+     * @return array task list iterator
+     */
     @Override
     public Iterator<Task> iterator() {
         return new Iterator<Task>() {

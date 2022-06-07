@@ -1,6 +1,7 @@
-package ua.edu.sumdu.j2se.kvitnytskyi.tasks;
+package ua.edu.sumdu.j2se.kvitnytskyi.tasks.model;
 
 import com.google.gson.Gson;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -21,9 +22,22 @@ import java.io.Writer;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+/**
+ * Class for input/output of data about tasks.
+ *
+ * @author kvitnytskyi
+ */
 public class TaskIO {
+    private static final Logger log = Logger.getLogger(TaskIO.class);
 
-    public static void write(AbstractTaskList tasks, OutputStream out) {
+    /**
+     * Writes tasks from the list to the stream in binary format.
+     *
+     * @param tasks - task list
+     * @param out   - output stream
+     * @throws IOException if the writing was failed
+     */
+    public static void write(AbstractTaskList tasks, OutputStream out) throws IOException {
         try (DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(out))) {
             dos.writeInt(tasks.size());
             for (Task t : tasks) {
@@ -43,11 +57,19 @@ public class TaskIO {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace(); // TODO: handle exception
+            log.error(e);
+            throw e;
         }
     }
 
-    public static void read(AbstractTaskList tasks, InputStream in) {
+    /**
+     * Reads tasks from the stream to the given task list.
+     *
+     * @param tasks - task list
+     * @param in    - input stream
+     * @throws IOException if the reading was failed
+     */
+    public static void read(AbstractTaskList tasks, InputStream in) throws IOException {
         try (DataInputStream dis = new DataInputStream(new BufferedInputStream(in))) {
             int size = dis.readInt();
             for (int i = 0; i < size; i++) {
@@ -70,37 +92,69 @@ public class TaskIO {
                 tasks.add(t);
             }
         } catch (IOException e) {
-            e.printStackTrace(); // TODO: handle exception
+            log.error(e);
+            throw e;
         }
     }
 
-    public static void writeBinary(AbstractTaskList tasks, File file) {
+    /**
+     * Writes tasks from the list to a file.
+     *
+     * @param tasks - task list
+     * @param file  - output file
+     * @throws IOException if the writing was failed
+     */
+    public static void writeBinary(AbstractTaskList tasks, File file) throws IOException {
         try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
             write(tasks, bos);
         } catch (IOException e) {
-            e.printStackTrace(); // TODO: handle exception
+            log.error(e);
+            throw e;
         }
     }
 
-    public static void readBinary(AbstractTaskList tasks, File file) {
+    /**
+     * Reads tasks from a file to the specified task list.
+     *
+     * @param tasks - task list
+     * @param file  - input file
+     * @throws IOException if the reading was failed
+     */
+    public static void readBinary(AbstractTaskList tasks, File file) throws IOException {
         try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file))) {
             read(tasks, bis);
         } catch (IOException e) {
-            e.printStackTrace(); // TODO: handle exception
+            log.error(e);
+            throw e;
         }
     }
 
-    public static void write(AbstractTaskList tasks, Writer out) {
+    /**
+     * Writes tasks from the list to the stream in JSON format.
+     *
+     * @param tasks - task list
+     * @param out   - output stream
+     * @throws IOException if the writing was failed
+     */
+    public static void write(AbstractTaskList tasks, Writer out) throws IOException {
         String json = new Gson().toJson(tasks);
         try (BufferedWriter writer = new BufferedWriter(out)) {
             writer.write(json);
             writer.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e);
+            throw e;
         }
     }
 
-    public static void read(AbstractTaskList tasks, Reader in) {
+    /**
+     * Reads tasks from the stream to the list.
+     *
+     * @param tasks - task list
+     * @param in    - input stream
+     * @throws IOException if the reading was failed
+     */
+    public static void read(AbstractTaskList tasks, Reader in) throws IOException {
         try (BufferedReader reader = new BufferedReader(in)) {
             String json;
             while ((json = reader.readLine()) != null) {
@@ -110,21 +164,37 @@ public class TaskIO {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e);
+            throw e;
         }
     }
 
-    public static void writeText(AbstractTaskList tasks, File file) {
+    /**
+     * Writes tasks to a file in JSON format.
+     *
+     * @param tasks - task list
+     * @param file  - JSON output file
+     * @throws IOException if the writing was failed
+     */
+    public static void writeText(AbstractTaskList tasks, File file) throws IOException {
         String json = new Gson().toJson(tasks);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(json);
             writer.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e);
+            throw e;
         }
     }
 
-    public static void readText(AbstractTaskList tasks, File file) {
+    /**
+     * Reads tasks from a file.
+     *
+     * @param tasks - task list
+     * @param file  - JSON input file
+     * @throws IOException if the reading was failed
+     */
+    public static void readText(AbstractTaskList tasks, File file) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String json;
             while ((json = reader.readLine()) != null) {
@@ -134,7 +204,8 @@ public class TaskIO {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e);
+            throw e;
         }
     }
 }
